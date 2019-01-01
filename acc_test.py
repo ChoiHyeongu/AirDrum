@@ -1,6 +1,7 @@
 import cwiid
 import time
 import pygame
+import math
 
 def setup():
 
@@ -48,7 +49,10 @@ def setLedNum(led = None, bin = None):
     return led
 
 def getAcc(wii):
-    acc_delay = 0.3
+    acc_delay = 0.2
+    
+    remote_angle = 0
+    nunchuk_angle = 0
     
     wii.rpt_mode = cwiid.RPT_BTN | cwiid.RPT_ACC | cwiid.RPT_NUNCHUK
     
@@ -63,34 +67,28 @@ def getAcc(wii):
     remote_accList = list(remote_acc)
     remote_x = remote_accList[0]
     remote_y = remote_accList[1]
-    remote_z = remote_accList[2]
+    remote_z = remote_accList[2]        
 
-    if remote_z < 120 and nunchuk_z < 100:
-        soundPlay(3)
-        print("Snare and Closed Hi-Hat")
-        time.sleep(acc_delay)
-
-    elif  remote_z < 120:
-        soundPlay(1)
-        print("Snare")
-        print("Remote : X = {} Y = {} Z = {}".format(remote_x,remote_y,remote_z))
-    
-    elif  nunchuk_z < 100 or nunchuk_z > 200 :
-        soundPlay(2)
-        print("Closed Hi-Hat")
-        print("Nunchuk : X = {} Y = {} Z = {}".format(nunchuk_x,nunchuk_y,nunchuk_z))
-        
-    
-    #print("Nunchuk : X = {} Y = {} Z = {}".format(nunchuk_x,nunchuk_y,nunchuk_z))
     #print("Remote : X = {} Y = {} Z = {}".format(remote_x,remote_y,remote_z))
-
+    if(remote_z != 0 and remote_x !=0):
+        remote_angle = math.atan(remote_x/remote_z)
+    if(nunchuk_z != 0 and nunchuk_x !=0):
+        nunchuk_angle = math.atan(nunchuk_x/nunchuk_z)
     
+    print("Remote Angle : {}".format(remote_angle))
+    print("Nunchuk Angle : {}".format(nunchuk_angle))
+    
+    if remote_angle != 0.0:
+        soundPlay(1)
+    if nunchuk_angle != 0.0:
+        soundPlay(2)
+    #print("Nunchuk : X = {} Y = {} Z = {}".format(nunchuk_x,nunchuk_y,nunchuk_z))    
     time.sleep(acc_delay)
 
 def soundPlay(num):
 
     sound_files = ["/home/pi/Desktop/Programming/snare.wav",
-                   "/home/pi/Desktop/Programming/close_hihat.wav"]
+                   "/home/pi/Desktop/Programming/closed_hihat.wav"]
                    
     
     if num == 1:
@@ -114,3 +112,4 @@ if __name__ == "__main__":
         getAcc(wii)
     
         
+
