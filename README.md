@@ -13,3 +13,6 @@ airdrum with raspberry pi
 3. 컨트롤러를 휘두르면 closed-hihat소리를 냅니다.
 4. nunchuck를 휘두르면 snare소리를 냅니다.
 5. 동시에 휘두르면 두 소리가 함께 납니다.
+
+# 3. Made by
+Songpatechnical highschool Hyeongu Choi
